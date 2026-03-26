@@ -92,7 +92,7 @@ font-weight:bold;
 <option value="admin">Admin</option>
 </select>
 
-<button onclick="registerbtn()">Register</button>
+<button onclick="register()">Register</button>
 
 <br><br>
 
@@ -112,7 +112,7 @@ let email=document.getElementById("email").value
 let password=document.getElementById("password").value
 let role=document.getElementById("role").value
 
-let res=await fetch("http:backend-6b1n.onrender.com/register",{
+let res=await fetch("http://backend-6b1n.onrender.com/register",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({email,password,role})
