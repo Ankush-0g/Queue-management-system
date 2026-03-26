@@ -142,7 +142,7 @@ background:#f2f2f2;
 
 async function loadTokens(){
 
-let res = await fetch("http://backend-6b1n.onrender.com/tokens")
+let res = await fetch("https://backend-6b1n.onrender.com/tokens")
 
 let tokens = await res.json()
 
@@ -173,7 +173,7 @@ document.getElementById("tokenTable").innerHTML = table
 
 async function updateToken(tokenNumber){
 
-let res = await fetch(`http://backend-6b1n.onrender.com/update/${tokenNumber}?status=served`,{
+let res = await fetch(`https://backend-6b1n.onrender.com/update/${tokenNumber}?status=served`,{
 method:"PUT"
 })
 
