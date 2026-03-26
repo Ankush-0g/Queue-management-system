@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Smart Queue Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f5f6fa;
+}
+
+/* Header */
+
+.header{
+background:#667eea;
+color:white;
+padding:15px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+/* Logo */
+
+.logo{
+width:80px;
+}
+
+/* Container */
+
+.container{
+padding:30px;
+max-width:800px;
+margin:auto;
+}
+
+/* Cards */
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Progress */
+
+.progress{
+height:25px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.progress-bar{
+height:25px;
+background:#4caf50;
+width:0%;
+}
+
+/* Buttons */
+
+button{
+padding:10px 20px;
+background:#667eea;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:hover{
+background:#5563d6;
+}
+
+.top-buttons{
+display:flex;
+gap:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<div style="display:flex;align-items:center;gap:10px">
+<img src="logo.png" class="logo">
+<h2>Smart Queue Dashboard</h2>
+</div>
+
+<div class="top-buttons">
+
+<button onclick="openAdmin()">Admin Panel</button>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<h3>Welcome <span id="userEmail"></span></h3>
+
+<div class="card">
+
+<h3>Book Token</h3>
+
+<select id="service">
+
+<option value="Aadhar Update">Aadhar Update</option>
+<option value="Passport Application">Passport Application</option>
+<option value="Driving License">Driving License</option>
+<option value="Bank Services">Bank Services</option>
+<option value="Hospital Appointment">Hospital Appointment</option>
+<option value="Electricity Bill Payment">Electricity Bill Payment</option>
+<option value="Railway Ticket Counter">Railway Ticket Counter</option>
+<option value="College Admission">College Admission</option>
+<option value="Government Certificate">Government Certificate</option>
+<option value="Visa Application">Visa Application</option>
+
+</select>
+
+<br>
+
+<button onclick="bookToken()">Generate Token</button>
+
+</div>
+
+<div class="card">
+
+<h3>Your Token Status</h3>
+
+<p id="tokenInfo">No token yet</p>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+</div>
+
+<div class="card" style="text-align:center">
+
+<h2>Now Serving Token</h2>
+
+<h1 id="nowServing" style="font-size:50px;color:#764ba2">0</h1>
+
+</div>
+
+</div>
+
+<script>
+
+/* Show logged user */
+
+document.getElementById("userEmail").innerText =
+localStorage.getItem("user_email")
+
+/* Logout */
+
+function logout(){
+
+localStorage.removeItem("user_email")
+
+window.location="login.html"
+
+}
+
+/* Open admin */
+
+function openAdmin(){
+
+window.location="admin.html"
+
+}
+
+/* Book token */
+
+async function bookToken(){
+
+let service = document.getElementById("service").value
+
+let email = localStorage.getItem("user_email")
+
+let response = await fetch("http://127.0.0.1:8000/book", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+user_email: email,
+service: service
+})
+
+})
+
+let data = await response.json()
+
+document.getElementById("tokenInfo").innerHTML =
+"Token Number: " + data.token_number +
+"<br>Service: " + service +
+"<br>Estimated Wait: " + data.estimated_time + " minutes"
+
+}
+
+/* Load now serving */
+
+async function loadNowServing(){
+
+let res = await fetch("http://127.0.0.1:8000/now-serving")
+
+let data = await res.json()
+
+document.getElementById("nowServing").innerText = data.now_serving
+
+}
+
+setInterval(loadNowServing,2000)
+
+loadNowServing()
+
+</script>
+
+</body>
+</html>

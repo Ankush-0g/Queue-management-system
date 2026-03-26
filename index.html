@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Smart Queue System - Login</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#667eea,#764ba2);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+/* Logo */
+
+.logo{
+width:350px;
+margin-bottom:20px;
+}
+
+/* Card */
+
+.card{
+background:white;
+padding:40px;
+border-radius:12px;
+width:350px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ddd;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#667eea;
+border:none;
+color:white;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#5563d6;
+}
+
+a{
+text-decoration:none;
+color:#667eea;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Logo -->
+
+<img src="logo.png" class="logo">
+
+<div class="card">
+
+<h2>Smart Queue Login</h2>
+
+<input type="text" id="email" placeholder="Email">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<br><br>
+
+<p>Don't have an account?  
+<a href="register.html">Register here</a>
+</p>
+
+</div>
+
+<script>
+
+/* Auto redirect if already logged in */
+
+if(localStorage.getItem("user_email")){
+window.location="dashboard.html"
+}
+
+async function login(){
+
+let email=document.getElementById("email").value
+let password=document.getElementById("password").value
+
+let res=await fetch("http://127.0.0.1:8000/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email,password})
+})
+
+let data=await res.json()
+
+if(data.message=="Login Successful"){
+
+localStorage.setItem("user_email",email)
+
+window.location="dashboard.html"
+
+}else{
+
+alert("Invalid Login")
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

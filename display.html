@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Queue Display</title>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+margin:0;
+}
+
+/* Header */
+
+.header{
+background:#764ba2;
+padding:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:20px;
+}
+
+/* Logo */
+
+.logo{
+width:350px;
+}
+
+/* Title */
+
+.title{
+font-size:40px;
+}
+
+/* Container */
+
+.container{
+margin-top:80px;
+}
+
+/* Token boxes */
+
+.tokenBox{
+display:inline-block;
+margin:40px;
+padding:60px;
+border-radius:20px;
+background:#222;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+min-width:300px;
+}
+
+/* Token numbers */
+
+.tokenNumber{
+font-size:90px;
+color:#00ffcc;
+margin-top:20px;
+}
+
+/* Button */
+
+button{
+padding:10px 20px;
+background:#764ba2;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+margin-top:30px;
+}
+
+button:hover{
+background:#5e3c8c;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<div class="title">
+Smart Queue Display
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="tokenBox">
+
+<h2>Now Serving</h2>
+
+<div id="nowServing" class="tokenNumber">0</div>
+
+</div>
+
+<div class="tokenBox">
+
+<h2>Next Token</h2>
+
+<div id="nextToken" class="tokenNumber">0</div>
+
+</div>
+
+<br>
+
+<button onclick="openAdmin()">Back to Admin</button>
+
+</div>
+
+<script>
+
+/* Load queue */
+
+async function loadQueue(){
+
+let res = await fetch("http://127.0.0.1:8000/queue-display")
+
+let data = await res.json()
+
+document.getElementById("nowServing").innerText = data.now_serving || 0
+
+document.getElementById("nextToken").innerText = data.next_token || 0
+
+}
+
+/* Refresh every 2 seconds */
+
+setInterval(loadQueue,2000)
+
+loadQueue()
+
+/* Go back */
+
+function openAdmin(){
+
+window.location="admin.html"
+
+}
+
+</script>
+
+</body>
+
+</html>

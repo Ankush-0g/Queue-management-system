@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6f9;
+}
+
+/* Header */
+
+.header{
+background:#764ba2;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+/* Logo */
+
+.logo{
+width:180px;
+}
+
+/* Buttons */
+
+.top-buttons{
+display:flex;
+gap:10px;
+}
+
+button{
+padding:8px 15px;
+background:#764ba2;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#5e3c8c;
+}
+
+/* Container */
+
+.container{
+padding:30px;
+max-width:1000px;
+margin:auto;
+}
+
+/* Card */
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#f2f2f2;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div style="display:flex;align-items:center;gap:10px">
+<img src="logo.png" class="logo">
+<h2>Smart Queue Admin Panel</h2>
+</div>
+
+<div class="top-buttons">
+
+<button onclick="openDashboard()">Dashboard</button>
+
+<button onclick="openDisplay()">Queue Display</button>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Queue Tokens</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Token</th>
+<th>Email</th>
+<th>Service</th>
+<th>Status</th>
+<th>Estimated Wait</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="tokenTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+/* Load tokens */
+
+async function loadTokens(){
+
+let res = await fetch("http://127.0.0.1:8000/tokens")
+
+let tokens = await res.json()
+
+let table = ""
+
+tokens.forEach(t => {
+
+table += `
+<tr>
+<td>${t.token_number}</td>
+<td>${t.user_email}</td>
+<td>${t.service}</td>
+<td>${t.status}</td>
+<td>${t.estimated_time || 0} minutes</td>
+<td>
+<button onclick="updateToken(${t.token_number})">Serve</button>
+</td>
+</tr>
+`
+
+})
+
+document.getElementById("tokenTable").innerHTML = table
+
+}
+
+/* Serve token */
+
+async function updateToken(tokenNumber){
+
+let res = await fetch(`http://127.0.0.1:8000/update/${tokenNumber}?status=served`,{
+method:"PUT"
+})
+
+let data = await res.json()
+
+alert(data.message)
+
+loadTokens()
+
+}
+
+/* Navigation */
+
+function openDashboard(){
+
+window.location="dashboard.html"
+
+}
+
+function openDisplay(){
+
+window.location="display.html"
+
+}
+
+function logout(){
+
+localStorage.removeItem("user_email")
+
+window.location="login.html"
+
+}
+
+/* Auto refresh tokens */
+
+setInterval(loadTokens,2000)
+
+loadTokens()
+
+</script>
+
+</body>
+</html>

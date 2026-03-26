@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Register - Smart Queue</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#43cea2,#185a9d);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+/* Logo */
+
+.logo{
+width:350px;
+margin-bottom:20px;
+}
+
+/* Card */
+
+.card{
+background:white;
+padding:40px;
+border-radius:12px;
+width:350px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ddd;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#43cea2;
+border:none;
+color:white;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2bbf9c;
+}
+
+a{
+text-decoration:none;
+color:#185a9d;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Logo -->
+
+<img src="logo.png" class="logo">
+
+<div class="card">
+
+<h2>Create Account</h2>
+
+<input type="email" id="email" placeholder="Email">
+
+<input type="password" id="password" placeholder="Password">
+
+<select id="role">
+<option value="user">User</option>
+<option value="admin">Admin</option>
+</select>
+
+<button onclick="register()">Register</button>
+
+<br><br>
+
+<p>Already have an account?  
+<a href="login.html">Login here</a>
+</p>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+async function register(){
+
+let email=document.getElementById("email").value
+let password=document.getElementById("password").value
+let role=document.getElementById("role").value
+
+let res=await fetch("http://127.0.0.1:8000/register",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email,password,role})
+})
+
+let data=await res.json()
+
+document.getElementById("msg").innerText=data.message
+
+if(data.message=="User Registered Successfully"){
+    
+    alert("Registration Successful! Please Login")
+    
+    window.location="login.html"
+}
+
+}
+
+</script>
+
+</body>
+</html>
